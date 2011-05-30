@@ -33,7 +33,7 @@ function liste_lettres($lettre)
   $res = $DB->Execute($req);
   $tab_lettres = array();
   while ($row = $res->FetchRow()) {
-    $tab_lettres[$row[0]] = 1;
+    $tab_lettres[ord($row[0])] = 1;
   }
   $res->Close();
 
@@ -41,11 +41,13 @@ function liste_lettres($lettre)
   for ($l=ord("A"); $l<=ord("Z"); $l++) {
     if ($lettre == $l) { // Lettre sélectionnée
       echo "<b>[",chr($l),"]</b> ";
-    } elseif (isset($tab_lettres[$l])) { // Lettres avec contenu non vide
-      echo "<a href=\"javascript:choix_lettre('us', ",$l,");\">[",chr($l),
-	"]</a> ";
     } else {
-      echo "[",chr($l),"] ";
+      if (isset($tab_lettres[$l])) { // Lettres avec contenu non vide
+	echo "<a href=\"javascript:choix_lettre('us', ",$l,");\">[",chr($l),
+	  "]</a> ";
+      } else {
+	echo "[",chr($l),"] ";
+      }
     }
   }
   echo "</p>\n";
@@ -68,16 +70,18 @@ echo "</form>\n";
 
 // Désactivation d'un compte
 if (isset($_POST["desactiver"]) && $_POST["desactiver"]) {
-  $DB->Execute("update ".$prefix_tables."user set actif=0 where id_user=".
-	       $_POST["desactiver"]);
+  $req = "update ".$prefix_tables."user set actif='f' where id_user=".
+    $_POST["desactiver"];
+  $DB->Execute($req);
 }
 
 if ($lettre) {
-  $res = $DB->Execute("SELECT DISTINCT(u.id_user), u.login, u.actif
-                         FROM ".$prefix_tables."user u, ".$prefix_tables."user_est_de_type ut
-                         WHERE ORD(UPPER(SUBSTRING(u.login FROM 2 FOR 1)))=?
-                         AND u.login!='admin' AND u.id_user=ut.id_user",
-		      array($lettre));
+  $req = "SELECT DISTINCT(u.id_user), u.login, u.actif
+          FROM ".$prefix_tables."user u, ".$prefix_tables."user_est_de_type ut
+          WHERE UPPER(SUBSTRING(u.login FROM 2 FOR 1))='".
+    chr($lettre)."'
+          AND u.login!='admin' AND u.id_user=ut.id_user";
+  $res = $DB->Execute($req);
 
   $tab_result = array();
   while ($row = $res->FetchRow()) {
@@ -88,8 +92,9 @@ if ($lettre) {
     }
     // Informations sur les types de l'utilisateur
     $res2 = $DB->Execute("SELECT ut.id, ut.id_type, us.libelle
-                              FROM ".$prefix_tables."user_est_de_type ut, ".$prefix_tables."user_type us
-                              WHERE ut.id_user=? AND ut.id_type=us.id_type",
+                          FROM ".$prefix_tables."user_est_de_type ut, ".
+			 $prefix_tables."user_type us
+                          WHERE ut.id_user=? AND ut.id_type=us.id_type",
 			 array($row[0]));
     while ($row2 = $res2->FetchRow()) {
       if (!isset($tab_result[$row[0]][4])) { // On récupère le nom de l'utilisateur si on ne l'a pas déjà fait
@@ -147,12 +152,15 @@ if ($lettre) {
   foreach($tab_result as $row) {
     if ($k==0) echo "<tr align='center'";
     else echo "<tr align='center' bgcolor='$line_color'";
-    if ($row[5]) echo " onClick=\"desactiver('us',",$row[0],");\" style=\"cursor:pointer\"";
+    if ($row[5] == 't') {
+      echo " onClick=\"desactiver('us',",$row[0],
+	");\" style=\"cursor:pointer\"";
+    }
     echo ">\n";
     echo "<td>",$row[1],"</td>";
     echo "<td>",$row[2],"</td>";
     echo "<td>",$row[3],"</td>";
-    echo "<td>",(($row[5]) ? "oui" : "<b>non</b>"),"</td>";
+    echo "<td>",(($row[5] == "t") ? "oui" : "<b>non</b>"),"</td>";
     echo "</tr>\n";
     $k = ($k==0)?1:0;
   }
