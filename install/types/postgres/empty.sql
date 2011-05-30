@@ -870,10 +870,10 @@ INSERT INTO "PREFIXmenu_data" VALUES (102, 0, 7, '', 'PREFIXsalle', 33, 3);
 -- --------------------------------------------------------
 -- Liens Menu;
 
-INSERT INTO "PREFIXmenu_lien" VALUES (1, 'gestion_libelles.php', TRUE);
-INSERT INTO "PREFIXmenu_lien" VALUES (2, 'calendrier.php', TRUE);
-INSERT INTO "PREFIXmenu_lien" VALUES (3, 'enseignant.php', TRUE);
-INSERT INTO "PREFIXmenu_lien" VALUES (4, 'userlist.php', TRUE);
+INSERT INTO "PREFIXmenu_lien" VALUES (1, 'general/gestion_libelles.php', TRUE);
+INSERT INTO "PREFIXmenu_lien" VALUES (2, 'general/calendrier.php', TRUE);
+INSERT INTO "PREFIXmenu_lien" VALUES (3, 'general/enseignant.php', TRUE);
+INSERT INTO "PREFIXmenu_lien" VALUES (4, 'general/userlist.php', TRUE);
 INSERT INTO "PREFIXmenu_lien" VALUES (5, 'motdepasse.php', TRUE);
 INSERT INTO "PREFIXmenu_lien" VALUES (6, 'etudiant/vue_etudiant.php', TRUE);
 INSERT INTO "PREFIXmenu_lien" VALUES (7, 'diplome.php', TRUE);

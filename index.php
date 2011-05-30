@@ -18,7 +18,6 @@ if (isset($_GET["page"]) and !strcmp($_GET["page"], "module")) {
   buildHeader("");
 }
 
-
 // Page courante
 if (!isset($_GET["page"])) {
   $page = "login";
