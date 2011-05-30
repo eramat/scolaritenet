@@ -908,21 +908,19 @@ INSERT INTO "PREFIXmenu_lien" VALUES (37, 'administration/gestion_menu.php', FAL
 INSERT INTO "PREFIXmenu_lien" VALUES (39, 'menu.php', FALSE);
 
 -- --------------------------------------------------------
---
--- Types utilisateurs
---
+-- Types utilisateurs;
+
 INSERT INTO "PREFIXuser_type" VALUES (1, 'Administrateur');
 INSERT INTO "PREFIXuser_type" VALUES (2, 'Enseignant');
 INSERT INTO "PREFIXuser_type" VALUES (3, 'Etudiant');
 INSERT INTO "PREFIXuser_type" VALUES (4, 'Directeur d''&eacute;tudes');
 INSERT INTO "PREFIXuser_type" VALUES (5, 'Pr&eacute;sident de jury');
-INSERT INTO "PREFIXuser_type" VALUES (6, 'Directeur de \r\nd&eacute;partemen');
+INSERT INTO "PREFIXuser_type" VALUES (6, 'Directeur de d&eacute;partement');
 INSERT INTO "PREFIXuser_type" VALUES (7, 'Secr&eacute;taire');
 INSERT INTO "PREFIXuser_type" VALUES (8, 'Superviseur');
 
 -- --------------------------------------------------------
---
--- Création du compte administrateur
---
-INSERT INTO "PREFIXuser" VALUES (1, 'admin', '', 0);
+-- Création du compte administrateur;
+
+INSERT INTO "PREFIXuser" VALUES (1, 'admin', '', FALSE);
 INSERT INTO "PREFIXuser_est_de_type" VALUES (1, 1, 1);
