@@ -54,7 +54,7 @@ function est_utilisateur_actif($login) {
 
   $login = strtolower(trim($login));
   $rep = $DB->GetOne("select id_user from ".$prefix_tables.
-		     "user where login='".$login."' and actif=1");
+		     "user where login='".$login."' and actif=TRUE");
   return $rep;
 }
 
@@ -62,7 +62,8 @@ function verifie_existence_utilisateur($login) {
   global $prefix_tables, $DB;
 
   $login = strtolower(trim($login));
-  return $DB->GetOne("select count(*) from ".$prefix_tables."user where login='".$login."'");
+  return $DB->GetOne("select count(*) from ".$prefix_tables.
+		     "user where login='".$login."'");
 }
 
 // Formulaire pour le changement de mot de passe
@@ -87,7 +88,9 @@ function verifie_validite_password($password1, $password2) {
 
 function modifie_donnees($login, $password) {
   global $prefix_tables, $DB;
-  $req = "update ".$prefix_tables."user set password=md5(?), actif=1 where login=?";
+
+  $req = "update ".$prefix_tables.
+    "user set password=md5(?), actif=TRUE where login=?";
   $req_array = array($password, $login);
   $DB->Execute($req, $req_array);
 }
@@ -99,9 +102,11 @@ if (isset($_POST["login"]) && !est_utilisateur_actif($_POST["login"])) {
     if (isset($_POST["nouveau1"])) {
       $password1 = trim($_POST["nouveau1"]);
       $password2 = trim($_POST["nouveau2"]);
-      if (!empty($password1) && verifie_validite_password($password1, $password2)) {
+      if (!empty($password1) &&
+	  verifie_validite_password($password1, $password2)) {
 	modifie_donnees($_POST["login"], $password1);
-	echo "<p align=\"center\"><b>Vous pouvez maintenant vous connecter</b><br /><br /></p>\n";
+	echo "<p align=\"center\"><b>Vous pouvez maintenant vous connecter".
+	  "</b><br /><br /></p>\n";
 	formulaire_login();
       } else {
 	erreur("Choix du mot de passe incorrect");
