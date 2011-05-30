@@ -1,0 +1,322 @@
+
+#tblentete { 
+             width: 100%;
+             height: 120px;
+             border-spacing: 0px;
+             border-style: solid;
+             border-width: 1px;
+             border-color: #000000;
+             background-color: #6F8DB9;
+             text-align: center;
+             }
+#tblcorps { 
+            width: 100%;
+            height: 120px;
+            border-spacing: 0px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #000000;
+            background-color: #ffffff;
+            text-align: center;
+            padding : 10px;
+             }
+
+#maintable { 
+             width: 100%;
+             border-spacing: 0px;
+             border-style: solid;
+             border-width: 0px;
+             border-color: #000000;
+             text-align: center;
+             padding: 0px;
+             }
+
+#titrehaut { 
+             width: 100%;
+             border-spacing: 0px;
+             border-style: dotted;
+             border-width: 0px;
+             border-color: #000000;
+             background-color: #6F8DB9;
+             text-align: center;
+             padding: 10px;
+             font-size: 32px;
+             font-weight: bold;
+             }
+
+#boite_infos { 
+               width: 90%;
+               background-color: #ffffff;
+               height: 20px;
+               border-width: 1px;
+               border-color: #777777;
+               border-style: solid;
+               margin-top: 10px;
+               margin-left: 30px; 
+               margin-right: 30px;
+               }
+
+#cadreaide { 
+             background-color: #ffffff;
+             border-width: 1px;
+             border-style: dashed;
+             padding: 10px;
+               }
+
+img.tblentete { 
+                margin-right: 10px;
+                margin-left: 10px;
+                border: 0px;
+                }
+
+
+dl, dt, dd, ul, li {
+                     margin: 0;
+                     padding: 0;
+                     list-style-type: none;
+                     }
+#menu {
+        position: absolute;
+        top: 143px;
+        left: 15px;
+        width: 140px;;
+        }
+
+#menu dt {
+           cursor: pointer;
+           background: #6F8DB9;
+           height: 20px;
+           line-height: 20px;
+           margin: 2px 0;
+           border: 1px solid #000000;
+           text-align: center;
+           font-weight: bold;
+           }
+
+#menu dd {
+           position: absolute;
+           z-index: 100;
+           left: 130px;
+           margin-top: -20px;;
+           width: 140px;
+           background: #eeeeee;
+           border: 1px solid gray;
+           display: none;
+           }
+
+#menu ul {
+           padding: 2px;
+           }
+#menu li {
+           text-align: center;
+           font-size: 9px;
+           height: 20px;
+           line-height: 18px;
+           }
+#menu li a, #menu dt a {
+                         color: #000;
+                         text-decoration: none;
+                         display: block;
+                         }
+
+#menu li a:hover {
+                   text-decoration: underline;
+                   }
+
+
+td.info_haut { 
+               /*width: 25%;*/
+               border-style: dotted;
+               border-width: 1px;
+               border-color: #000000;
+               background-color: yellow;
+               text-align: center;
+               padding: 1px;
+               color: #000000;
+               font-family: Arial;
+               font-size: 10px;
+               font-style: none;
+               }
+
+
+body {
+       background: #E9E9D1;
+       font-family : Verdana, Arial, Helvetica, sans-serif;
+       font-size : 8pt;
+       color : #000000;
+       margin : 15px;
+       }
+
+a {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	color : #333388;
+	text-decoration : none;
+}
+a:hover {
+	color : #ee3333;
+	text-decoration : underline;
+}
+
+p {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 8pt;
+	color : #000000;
+}
+
+img {
+	border : 0px dashed;
+}
+
+div.entete {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 18pt;
+	color : #000000;
+	background-color : #94AAD6;
+	text-align : center;
+	vertical-align : middle;
+}
+
+table {
+	border : 0px solid;
+	padding : 0px;
+}
+
+td {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 8pt;
+	color : #000000;
+/*	vertical-align : top; */
+}
+
+select, option, input {
+	font-size : 9pt;
+}
+
+.erreur {
+	background-color : #ee0000;
+	color : #eeee00;
+	font-weight : bold;
+	text-align : center;
+}
+
+.barre_haut {
+	border-top: thin solid #0000FF;
+	border-right: 1.0pt solid #0000FF;
+	border-bottom: none;
+	border-left: none;
+}
+
+.barre_haut2 {
+	border-top: thin solid #0000FF;
+	border-right: 1.5pt solid #0000FF;
+	border-bottom: none;
+	border-left: none;
+}
+
+.barre_bas {
+	border-top: none;
+	border-right: 1.0pt solid #0000FF;
+	border-bottom: thin solid #0000FF;
+	border-left: none;
+	text-align: center;
+}
+
+.barre_bas2 {
+	border-top: none;
+	border-right: 1.5pt solid #0000FF;
+	border-bottom: thin solid #0000FF;
+	border-left: none;
+}
+
+.entete {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 20pt;
+	background-color: #94AAD6;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.titre {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14pt;
+	text-align: center;
+}
+
+.emploi {
+	width: 85%;
+	height: 25pt;
+	font-family: "Times New Roman", Times, serif;
+	text-align: center;
+	/* align: center; */
+	text-indent: 0pt;
+	vertical-align: top;
+
+}
+
+.joursemaine {
+	border: 1.0pt solid blue;
+	padding: 0cm 3.5pt 0cm 3.5pt;
+	font-weight: bold;
+	color: #0000FF;
+	vertical-align: middle;
+}
+
+.nomgroupe {
+	border: 1.0pt solid blue;
+	padding: 0cm 3.5pt 0cm 3.5pt;
+	vertical-align: middle;
+}
+
+.module {
+	border: 1pt solid;
+	border-color: #FFFFFF;
+	vertical-align: middle;
+}
+
+.examen {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	border: 1.0pt solid black;
+	color: black;
+	background-color: red;
+	vertical-align: middle;
+	background-position: center center;
+}
+
+.edtvacances {
+	text-align: center;
+	vertical-align: middle;
+	font-family: verdana;
+	height: auto;
+	border:1pt solid;
+	background-color: #CCCCCC;
+	padding:0cm 3.5pt 0cm 3.5pt;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.vacances {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	border: 1.0pt solid black;
+	vertical-align: middle;
+	background-position: center center;
+	text-align: center;
+}
+
+.avacances {
+	text-decoration: none;
+}
+
+input.button {
+	margin:0px;
+	padding:0px 5px 0px 5px;
+	border : #0b0b0b 1px solid;
+	height:18px;
+	background:#ddd;
+}
+input.button:hover {
+	background:#eee;
+	border : #0e0e0e 1px solid;
+}
+
