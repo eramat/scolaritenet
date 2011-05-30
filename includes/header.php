@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include("configuration.php");
+include("config.php");
 
 // Utilisation du package AdoDB
 include("/usr/share/php/adodb/adodb.inc.php");
