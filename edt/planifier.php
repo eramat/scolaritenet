@@ -741,7 +741,8 @@ if (($id_diplome>0 OR $id_option>0) AND $id_periode>0 AND $G_nb_modules>0
       if (!isset($creneau[($i-8)*2][$j]) or $creneau[($i-8)*2][$j] == 4) {
 	$z = $i-8;
 	$h = date("H:i:00",mktime(8+floor($z), ($z-floor($z)>0)?30:0, 0, 1, 1, 2000));
-	$request = recherche_creneau($id_diplome, $id_option, $id_groupe, $s_semaine, $j, $h);
+	$request = recherche_creneau($id_diplome, $id_option, $id_groupe,
+				     $s_semaine, $j, $h);
 	$result = $DB->Execute($request);
 
 	// Il y a un module de programmer qui me concerne !
@@ -847,11 +848,11 @@ if (($id_diplome>0 OR $id_option>0) AND $id_periode>0 AND $G_nb_modules>0
 	  $type = 0;
 	  $text = "";
 	  $max = 0;
-	  $from = $prefix_tables."module_planifie mp, ".$prefix_tables."module m,
-                            ".$prefix_tables."type_seance ts";
+	  $from = $prefix_tables."module_planifie mp, ".$prefix_tables.
+	    "module m, ".$prefix_tables."type_seance ts";
 	  $where = "mp.semaine = ".$s_semaine." AND mp.jour_semaine = ".$j."
-                              AND mp.heure_debut = '".$h."' AND mp.id_module = m.id
-                              AND mp.id_type_seance = ts.id";
+                    AND mp.heure_debut = '".$h."' AND mp.id_module = m.id
+                    AND mp.id_type_seance = ts.id";
 	  // c'est un diplôme ou une option
 	  if ($id_groupe <= 0) {
 	    // vérifie si des créneaux pour le diplôme (dans le cas d'une
@@ -860,20 +861,20 @@ if (($id_diplome>0 OR $id_option>0) AND $id_periode>0 AND $G_nb_modules>0
 
 	    // c'est une option donc je vérifie les créneaux du diplôme
 	    if ($id_option > 0) {
-	      $request = "SELECT mp.id_planifie, mp.heure_fin as h, ts.libelle, m.sigle
-                                        FROM ".$from.",
-                                        ".$prefix_tables."module_planifie_diplome mpd, ".$prefix_tables."groupe g
-                                        WHERE ".$where."
-                                        AND mpd.id_planifie = mp.id_planifie AND mpd.id_diplome = $id_diplome";
+	      $request = "SELECT mp.id_planifie, mp.heure_fin as h,
+                          ts.libelle, m.sigle FROM ".$from.",".
+		$prefix_tables."module_planifie_diplome mpd, ".
+		$prefix_tables."groupe g
+                           WHERE ".$where." AND mpd.id_planifie =
+                               mp.id_planifie AND mpd.id_diplome = $id_diplome";
 	    } else {
 	      // c'est un diplôme donc je vérifie les créneaux des options du diplôme
-	      $request = "SELECT mp.id_planifie, mp.heure_fin as h, ts.libelle, m.sigle
-                                        FROM ".$from.",
-                                        ".$prefix_tables."module_planifie_option mpo,
-                                        ".$prefix_tables."groupe g,
-                                        ".$prefix_tables."option o
-                                        WHERE ".$where." AND mpo.id_planifie = mp.id_planifie
-                                        AND mpo.id_option = o.id AND o.id_diplome = $id_diplome";
+	      $request = "SELECT mp.id_planifie, mp.heure_fin as h,
+                          ts.libelle, m.sigle FROM ".$from.", ".
+		$prefix_tables."module_planifie_option mpo,".
+		$prefix_tables."groupe g, ".$prefix_tables."option o
+                       WHERE ".$where." AND mpo.id_planifie = mp.id_planifie
+                       AND mpo.id_option = o.id AND o.id_diplome = $id_diplome";
 	    }
 	    $result2 = $DB->GetRow($request);
 	    if ($result2) {

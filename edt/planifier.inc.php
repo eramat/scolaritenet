@@ -12,10 +12,10 @@ function convertHeure($h) {
     $h1 = explode(":", $h);
     $x = 0.0 + $h1[0];
     $y = 0.0 + $h1[1];
-    $x += ($y==30)?0.5:0; 
+    $x += ($y==30)?0.5:0;
     return $x;
 }
-		
+
 // Conversion du format hh.mm en hh:mm
 function formateHeure($h) {
     return date("H:i:00", mktime(floor($h), ($h-floor($h)>0) ? 30 : 0, 0, 1, 1, 2000));
@@ -24,11 +24,11 @@ function formateHeure($h) {
 function recherche_prof($id,&$ini) {
     global $prefix_tables, $DB;
     $ini = "";
-    $prof = "SELECT e.initiales AS ini 
+    $prof = "SELECT e.initiales AS ini
              FROM ".$prefix_tables."enseignant e, ".$prefix_tables."module_planifie p
              WHERE p.id_planifie=? AND p.id_enseignant=e.id_enseignant";
     $result_prof = $DB->Execute($prof, array($id));
-  
+
     if ($result_prof->RecordCount()) {
         $ini_prof = $result_prof->FetchRow();
         $ini = $ini_prof[0];
@@ -41,7 +41,7 @@ function recherche_creneau($id_diplome,$id_option,$id_groupe,$semaine,$j,$h) {
 
     $select = "mp.id_planifie AS T0, m.sigle AS T1, ts.libelle AS T2, ts.id AS T3,
                mp.heure_fin, mp.heure_debut";
-    $from = $prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_sceance ts";
+    $from = $prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_seance ts";
     $where = "mp.semaine=".$semaine." AND mp.jour_semaine=".$j." AND mp.heure_debut='".$h."'
               AND mp.id_module=m.id AND mp.id_type_seance=ts.id";
 
@@ -69,47 +69,47 @@ function recherche_creneau($id_diplome,$id_option,$id_groupe,$semaine,$j,$h) {
 
 function recherche_autre_groupe_creneau($id_diplome,$id_groupe,$semaine,$j,$h1,$h2) {
     global $prefix_tables;
-    
+
     return "SELECT mp.heure_fin as hf, mp.heure_debut as hd, g.nom as t1, m.sigle as t2, ts.libelle as t3
-            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_sceance ts,
+            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_seance ts,
                  ".$prefix_tables."module_planifie_groupe mpg, ".$prefix_tables."groupe g
             WHERE mp.semaine = ".$semaine." AND mp.jour_semaine = ".$j." AND mp.heure_debut >= '".$h1."'
                   AND mp.heure_debut < '".$h2."' AND mp.id_module = m.id AND mp.id_type_seance = ts.id
-                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe." 
+                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe."
                   AND g.id_diplome = $id_diplome";
 }
 
 function recherche_autre_groupe_avant_creneau($id_diplome,$id_groupe,$semaine,$j,$h1,$h2) {
     global $prefix_tables;
-    
+
     return "SELECT mp.heure_fin as hf, mp.heure_debut as hd, g.nom as t1, m.sigle as t2, ts.libelle as t3
-            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_sceance ts,
+            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_seance ts,
                  ".$prefix_tables."module_planifie_groupe mpg, ".$prefix_tables."groupe g
             WHERE mp.semaine = ".$semaine." AND mp.jour_semaine = ".$j." AND mp.heure_debut < '".$h1."'
                   AND mp.heure_debut > '".$h2."' AND mp.id_module = m.id AND mp.id_type_seance = ts.id
-                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe." 
+                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe."
                   AND g.id_diplome = $id_diplome";
 }
 
 function recherche_autre_groupe_avant_creneau2($id_diplome,$id_groupe,$semaine,$j,$h1,$h2) {
     global $prefix_tables;
-    
+
     return "SELECT mp.heure_fin as hf, mp.heure_debut as hd, g.nom as t1, m.sigle as t2, ts.libelle as t3
-            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_sceance ts,
+            FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module m, ".$prefix_tables."type_seance ts,
                  ".$prefix_tables."module_planifie_groupe mpg, ".$prefix_tables."groupe g
             WHERE mp.semaine = ".$semaine." AND mp.jour_semaine = ".$j." AND mp.heure_debut < '".$h1."'
                   AND mp.heure_fin > '".$h2."' AND mp.id_module = m.id AND mp.id_type_seance = ts.id
-                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe." 
+                  AND mpg.id_planifie = mp.id_planifie AND mpg.id_groupe = g.id AND g.id <> ".$id_groupe."
                   AND g.id_diplome = $id_diplome";
 }
 
 // value = 0 : rien
 // value = 1 : un créneau entier
-// value = 2 : un demi-créneau 
-// value = 3 : un début de demi-créneau 
-// value = 4 : un demi-créneau avec "peut être" quelque chose en parallèle 
+// value = 2 : un demi-créneau
+// value = 3 : un début de demi-créneau
+// value = 4 : un demi-créneau avec "peut être" quelque chose en parallèle
 function set_creneau($i,$j,$d,$f,$value,&$creneau) {
-    for ($k=($i-8)*2+$d; $k<($i-8)*2+$f; $k++) 
+    for ($k=($i-8)*2+$d; $k<($i-8)*2+$f; $k++)
         $creneau[$k][$j] = $value;
 }
 
@@ -123,11 +123,11 @@ function set_creneau($i,$j,$d,$f,$value,&$creneau) {
 function afficher_module($i,$j,$g,$y,$id,$text,$color,&$creneau) {
     global $s_select;
 
-    // Si le nombre de creneaux horaires est superieur a 1 
+    // Si le nombre de creneaux horaires est superieur a 1
     // alors utilisation de rowspan
     if ($y * 2 > 1) {
         // Est-il sélectionné ?
-        if (substr($s_select,$g,1)=="x") 
+        if (substr($s_select,$g,1)=="x")
             afficher_creneau($i,$j,$y,$id,$text,"yellow",true);
         elseif ($color == "white")
             afficher_creneau($i,$j,$y,$id,$text,$color,true);
@@ -135,18 +135,18 @@ function afficher_module($i,$j,$g,$y,$id,$text,$color,&$creneau) {
             afficher_creneau($i,$j,$y,-1,$text,$color,false);
     } else {
         // Est-il sélectionné ?
-        if (substr($s_select,$g,1)=="x") 
+        if (substr($s_select,$g,1)=="x")
             afficher_creneau($i,$j,0.5,$id,$text,"yellow",true);
-        elseif ($color == "white") 
+        elseif ($color == "white")
             afficher_creneau($i,$j,0.5,$id,$text,$color,true);
         else
             afficher_creneau($i,$j,0.5,-1,$text,$color,false);
     }
     // Marquage des créneaux occupés
-    set_creneau($i,$j,0,$y*2,1,$creneau);  
+    set_creneau($i,$j,0,$y*2,1,$creneau);
 }
 
-// Affiche un demi-créneau non sélectionnable sans demi-créneau en parallèle 
+// Affiche un demi-créneau non sélectionnable sans demi-créneau en parallèle
 // i : heure de début
 // j : jour
 // y : nombre d'heures (0.5 = une demie-heure)
@@ -154,11 +154,11 @@ function afficher_module($i,$j,$g,$y,$id,$text,$color,&$creneau) {
 // id : id_planifie
 // text : texte du créneau
 function afficher_module2($i,$j,$y,$d,$text,&$creneau) {
-    // Si le nombre de creneaux horaires est superieur a 1 
+    // Si le nombre de creneaux horaires est superieur a 1
     // alors utilisation de rowspan
     if ($y * 2 > 1) {
         afficher_demi_creneau($i,$j,$y,-1,$text,"green",false);
-        afficher_demi_creneau($i,$j,0.5,-1,"&nbsp;&nbsp;&nbsp;&nbsp;","white",true); 
+        afficher_demi_creneau($i,$j,0.5,-1,"&nbsp;&nbsp;&nbsp;&nbsp;","white",true);
     } else {
         afficher_demi_creneau($i,$j,0.5,-1,$text,"green",false);
         afficher_demi_creneau($i,$j,0.5,-1,"&nbsp;&nbsp;&nbsp;&nbsp;","white",true);
@@ -167,23 +167,23 @@ function afficher_module2($i,$j,$y,$d,$text,&$creneau) {
     set_creneau($i,$j,0,$d*2,2,$creneau);
 }
 
-// Affiche un demi-créneau non sélectionnable 
+// Affiche un demi-créneau non sélectionnable
 //  avec un demi-créneau sélectionnable en parallèle
 // i : heure de début
 // j : jour
 // g : ???
 // y : nombre d'heures occupées par le créneau sélectionnable
 // d : décalage entre le créneau sélectionnable et le créneau non sélectionnable
-// y2 : nombre d'heures occupées par le créneau non sélectionnable 
+// y2 : nombre d'heures occupées par le créneau non sélectionnable
 // id : id_planifie
 // text : texte du créneau non sélectionnable
 // string : texte du créneau sélectionnable
 // color : couleur du créneau sélectionnable (white ou ???)
 function afficher_module3($i,$j,$g,$y,$d,$y2,$id,$string,$text,$color,&$creneau) {
-    // Si le nombre de creneaux horaires est superieur a 1 
+    // Si le nombre de creneaux horaires est superieur a 1
     // alors utilisation de rowspan
     if ($y * 2 > 1) {
-        if ($d <= 0) { // le premier demi-créneau a démarré avant ou démarre 
+        if ($d <= 0) { // le premier demi-créneau a démarré avant ou démarre
             // en même temps que le second
             if ($d == 0)
                 afficher_demi_creneau($i,$j,$y2,-1,$text,"green",false);
@@ -197,7 +197,7 @@ function afficher_module3($i,$j,$g,$y,$d,$y2,$id,$string,$text,$color,&$creneau)
         afficher_demi_creneau($i,$j,0.5,$id,$string,$color,true);
     }
     // Si le premier demi-créneau se termine plus tard
-    if ($y2+$d > $y) { 
+    if ($y2+$d > $y) {
         // Si le premier demi-créneau a démarré en même temps ou plus tôt
         if ($d <= 0) {
             // Tout est occupé
@@ -232,7 +232,7 @@ function afficher_module3($i,$j,$g,$y,$d,$y2,$id,$string,$text,$color,&$creneau)
 function afficher_module4($i,$j,$y,$d,$id,$text,$color,&$creneau) {
   global $creneau;
 
-  // Si le nombre de creneaux horaires est superieur a 1 
+  // Si le nombre de creneaux horaires est superieur a 1
   // alors utilisation de rowspan
   if ($y * 2 > 1)
     afficher_demi_creneau($i,$j,$y,$id,$text,$color,($color=="white"));
@@ -242,7 +242,7 @@ function afficher_module4($i,$j,$y,$d,$id,$text,$color,&$creneau) {
     set_creneau($i,$j,0,($y+$d)*2,1,$creneau);
     if ($d < 0)
       set_creneau($i,$j,($y+$d)*2,$y*2,2,$creneau);
-    else 
+    else
       set_creneau($i,$j,$y*2,($y+$d)*2,2,$creneau);
   }
   else {
@@ -276,7 +276,7 @@ function afficher_demi_creneau($i,$j,$y,$id,$text,$color,$on) {
 function afficher_creneau_libre($i,$j,$g,$color) {
     global $s_select;
 
-    if (substr($s_select,$g,1)=="x") 
+    if (substr($s_select,$g,1)=="x")
         afficher_creneau($i,$j,0.5,-1, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "yellow",true);
     else
         afficher_creneau($i,$j,0.5,-1, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $color,true);
@@ -285,17 +285,17 @@ function afficher_creneau_libre($i,$j,$g,$color) {
 function afficher_creneau_libre2($i,$j,$g) {
     global $s_select;
 
-    if (substr($s_select,$g,1)=="x") 
+    if (substr($s_select,$g,1)=="x")
         afficher_demi_creneau($i,$j,0.5,-1,"&nbsp;&nbsp;&nbsp;&nbsp;", "yellow",true);
     else
         afficher_demi_creneau($i,$j,0.5,-1,"&nbsp;&nbsp;&nbsp;&nbsp;", "white",true);
 }
 
-/*****************************************************************************/	
+/*****************************************************************************/
 /******************** Gestion des creneaux selectionnes **********************/
-/*****************************************************************************/	
+/*****************************************************************************/
 
-function clearCreneauHoraire(&$s_select) {	
+function clearCreneauHoraire(&$s_select) {
     $s_select = "";
     for ($i=8;$i<20;$i+=0.5) {
         for ($j=1;$j<=6;$j++) {
@@ -312,7 +312,7 @@ function ajoute_planifie($s_id_module,$s_id_type_seance,$s_id_enseignant,
                          $s_jour_semaine,$heure_debut,$heure_fin,
                          $id_diplome,$id_groupe,$id_option,$semaine) {
   global $prefix_tables, $DB;
-  
+
   if ($s_id_module > 0) {
     $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie
                   (id_module, id_type_seance, id_enseignant, id_salle, semaine, jour_semaine, heure_debut, heure_fin)
@@ -320,19 +320,19 @@ function ajoute_planifie($s_id_module,$s_id_type_seance,$s_id_enseignant,
 		 array($s_id_module, $s_id_type_seance, $s_id_enseignant, -1,
 		       $semaine, $s_jour_semaine , $heure_debut, $heure_fin));
     $id_planifie = $DB->Insert_ID();
-    
+
     // mise a jour de la table module_planifie_groupe
     // selon si on programme un cours a un groupe
     if ($id_groupe > 0)
-      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_groupe 
+      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_groupe
                       (id_planifie, id_groupe) VALUES (?, ?)",
 		   array($id_planifie, $id_groupe));
     elseif ($id_option > 0)
-      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_option 
+      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_option
                       (id_planifie, id_option) VALUES (?, ?)",
 		   array($id_planifie, $id_option));
     else
-      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_diplome 
+      $DB->Execute("INSERT INTO ".$prefix_tables."module_planifie_diplome
                       (id_planifie, id_diplome) VALUES (?, ?)",
 		   array($id_planifie, $id_diplome));
   }
@@ -343,9 +343,9 @@ function verifie_enseignant($s_id_enseignant, $s_semaine, $s_jour_semaine, $heur
 
   if ($s_id_enseignant != -1) {
     //"(((TIME_TO_SEC('$heure_fin') - TIME_TO_SEC(heure_debut) > 0) AND (TIME_TO_SEC(heure_fin) - TIME_TO_SEC('$heure_fin') > 0)) OR ((TIME_TO_SEC(heure_fin) - TIME_TO_SEC('$heure_debut') > 0) AND (TIME_TO_SEC('$heure_debut') - TIME_TO_SEC(heure_debut) > 0)) OR (TIME_TO_SEC('$heure_debut') - TIME_TO_SEC(heure_debut) >= 0 AND TIME_TO_SEC(heure_fin) - TIME_TO_SEC('$heure_fin') >= 0))";
-      
+
     // le prof est-il libre ?
-    $ok = $DB->GetOne("SELECT COUNT(*) FROM ".$prefix_tables."module_planifie 
+    $ok = $DB->GetOne("SELECT COUNT(*) FROM ".$prefix_tables."module_planifie
                        WHERE id_enseignant=? AND semaine=? AND jour_semaine=?
                        AND ((TIME_TO_SEC(?) - TIME_TO_SEC(heure_debut) <= 0
                        AND TIME_TO_SEC(heure_debut) - TIME_TO_SEC(?) < 0)
@@ -365,13 +365,13 @@ function verifie_horaire($id_module, $id_type_seance, $id_diplome, $id_option, $
     global $prefix_tables, $DB;
 
     // vérifie si le nombre d'heures prévues dans la semaine est suffisant
-    $nbh = $DB->GetOne("SELECT nombre_heures 
+    $nbh = $DB->GetOne("SELECT nombre_heures
                         FROM ".$prefix_tables."module_reparti
                         WHERE id_module=? AND id_type_seance=? AND semaine=? AND id_groupe=?",
                         array($id_module, $id_type_seance, $semaine, $id_groupe));
     $ok = ($nbh >= $nb);
     if ($ok) {
-        // vérifie si un créneau horaire n'est pas déjà programmé sur le créneau 
+        // vérifie si un créneau horaire n'est pas déjà programmé sur le créneau
         // ou à cheval sur le créneau
         $where = " mp.semaine=? AND mp.jour_semaine=?";
         $req_data = array(0 => $semaine, 1 => $jour_semaine);
@@ -399,7 +399,7 @@ function verifie_horaire($id_module, $id_type_seance, $id_diplome, $id_option, $
         $req_data[5] = $heure_debut; $req_data[6] = $heure_fin;
         $req_data[7] = $heure_debut; $req_data[8] = $heure_fin;
         $rep = $DB->GetOne("SELECT count(*) FROM ".$from." WHERE ".$where, $req_data);
-        $ok = (!$rep);   
+        $ok = (!$rep);
     }
     return $ok;
 }
@@ -428,14 +428,14 @@ function recherche_nb_heures_programmer($id_module, $id_type_seance, $semaine, $
     global $prefix_tables, $DB;
 
     if ($id_groupe > 0) { // pour le groupe
-        $request = "SELECT heure_debut, heure_fin 
+        $request = "SELECT heure_debut, heure_fin
                     FROM ".$prefix_tables."module_planifie mp, ".$prefix_tables."module_planifie_groupe mpg
                     WHERE mp.id_module=? AND mp.semaine=? AND mp.id_type_seance=?
                           AND mpg.id_planifie=mp.id_planifie AND mpg.id_groupe=?";
         $request_data = array($id_module, $semaine, $id_type_seance, $id_groupe);
     } else { // pour le diplôme ou l'option
-        $request = "SELECT heure_debut, heure_fin 
-                    FROM ".$prefix_tables."module_planifie 
+        $request = "SELECT heure_debut, heure_fin
+                    FROM ".$prefix_tables."module_planifie
                     WHERE id_module=? AND semaine=? AND id_type_seance=?";
         $request_data = array($id_module, $semaine, $id_type_seance);
     }
