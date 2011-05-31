@@ -40,7 +40,8 @@ function choix_niveau($id_niveau, $val_retour) {
   echo "<td>Niveau :</td>\n";
   echo "<td>\n";
   if ($res->RecordCount()) {
-    echo "<select name=\"niveau\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
+    echo "<select name=\"niveau\" onChange=\"choix.value=",$val_retour,
+      "; submit();\">\n";
     echo "<option value=\"0\"></option>\n";
     while ($row = $res->FetchRow()) {
       echo "<option value=\"",$row[0],"\"";
@@ -59,11 +60,9 @@ function choix_niveau($id_niveau, $val_retour) {
 function choix_annee($id_niveau, $id_annee, $val_retour) {
   global $prefix_tables, $DB;
 
-  $res = $DB->Execute("SELECT DISTINCT(annee)
-                       FROM ".$prefix_tables."diplome
-                       WHERE id_niveau=?
-                       ORDER BY annee asc",
-		      array($id_niveau));
+  $req = "SELECT DISTINCT(numero) FROM ".$prefix_tables."annee
+          WHERE id_niveau=".$id_niveau." ORDER BY numero asc";
+  $res = $DB->Execute($req);
   echo "<td>Ann&eacute;e :</td>\n";
   echo "<td>\n";
   if ($res->RecordCount()) {
@@ -91,7 +90,8 @@ function choix_domaine($id_domaine, $val_retour) {
     echo "<td>Domaine :</td>\n";
     echo "<td>\n";
     if ($res->RecordCount()) {
-        echo "<select name=\"domaine\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
+        echo "<select name=\"domaine\" onChange=\"choix.value=",$val_retour,
+	  "; submit();\">\n";
         echo "<option value=\"0\"></option>\n";
         while ($row = $res->FetchRow()) {
             echo "<option value=\"",$row[0],"\"";
@@ -106,138 +106,150 @@ function choix_domaine($id_domaine, $val_retour) {
     $res->Close();
 }
 
-//Affiche une liste déroulante avec les diplômes existants en fonction du domaine et du niveau
-function choix_diplome($id_niveau, $annee, $id_domaine, $id_diplome, $val_retour) {
-    global $prefix_tables, $DB;
-    $req = "SELECT id_diplome, sigle_complet
-            FROM ".$prefix_tables."diplome
-            WHERE id_niveau=? and annee=? and id_domaine=?";
-    $req_array = array($id_niveau, $annee, $id_domaine);
-    $res = $DB->Execute($req, $req_array);
-    echo "<td>Dipl&ocirc;me :</td>\n";
-    echo "<td>\n";
-    if ($res->RecordCount()) {
-        echo "<select name=\"diplome\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
-        echo "<option value=\"0\"></option>\n";
-        while ($row = $res->FetchRow()) {
-            echo "<option value=\"",$row[0],"\"";
-            if ($id_diplome==$row[0]) echo " selected";
-            echo ">",$row[1],"</option>\n";
-        }
-        echo "</select>\n";
-    } else {
-        echo "<i>Aucun dipl&ocirc;me enregistr&eacute;</i>\n";
+// Affiche une liste déroulante avec les diplômes existants en fonction
+// du domaine et du niveau
+function choix_diplome($id_niveau, $annee, $id_domaine, $id_diplome,
+		       $val_retour) {
+  global $prefix_tables, $DB;
+
+  $req = "SELECT id_diplome, sigle_complet
+          FROM ".$prefix_tables."diplome
+          WHERE id_niveau=? and annee=? and id_domaine=?";
+  $req_array = array($id_niveau, $annee, $id_domaine);
+  $res = $DB->Execute($req, $req_array);
+  echo "<td>Dipl&ocirc;me :</td>\n";
+  echo "<td>\n";
+  if ($res->RecordCount()) {
+    echo "<select name=\"diplome\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
+    echo "<option value=\"0\"></option>\n";
+    while ($row = $res->FetchRow()) {
+      echo "<option value=\"",$row[0],"\"";
+      if ($id_diplome==$row[0]) echo " selected";
+      echo ">",$row[1],"</option>\n";
     }
-    echo "</td>\n";
-    $res->Close();
+    echo "</select>\n";
+  } else {
+    echo "<i>Aucun dipl&ocirc;me enregistr&eacute;</i>\n";
+  }
+  echo "</td>\n";
+  $res->Close();
 }
 
-//Affiche une liste déroulante avec les options existantes en fonction du diplome
+// Affiche une liste déroulante avec les options existantes en fonction
+// du diplome
 function choix_option($id_diplome, $id_option, $val_retour, $est_obligatoire) {
-    global $prefix_tables, $DB;
-    $req = "SELECT id, nom
-            FROM ".$prefix_tables."option
-            WHERE id_diplome=?
-            ORDER BY nom ASC";
-    $res = $DB->Execute($req, array($id_diplome));
-    if ($res->RecordCount()) {
-        echo "<td>Option";
-        if (!$est_obligatoire) echo " (facultatif)";
-        echo " :</td>\n";
-        echo "<td>\n";
-        echo "<select name=\"option\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
-        echo "<option value=\"0\"></option>\n";
-        while ($row = $res->FetchRow()) {
-            echo "<option value=\"",$row[0],"\"";
-            if ($id_option==$row[0]) echo " selected";
-            echo ">",$row[1],"</option>\n";
-        }
-        echo "</select>\n";
-        echo "</td>\n";
-    } else {
-        echo "<input type=\"hidden\" name=\"option\" value=\"0\">\n";
+  global $prefix_tables, $DB;
+
+  $req = "SELECT id, nom
+          FROM ".$prefix_tables."option
+          WHERE id_diplome=?
+          ORDER BY nom ASC";
+  $res = $DB->Execute($req, array($id_diplome));
+  if ($res->RecordCount()) {
+    echo "<td>Option";
+    if (!$est_obligatoire) echo " (facultatif)";
+    echo " :</td>\n";
+    echo "<td>\n";
+    echo "<select name=\"option\" onChange=\"choix.value=",$val_retour,
+      "; submit();\">\n";
+    echo "<option value=\"0\"></option>\n";
+    while ($row = $res->FetchRow()) {
+      echo "<option value=\"",$row[0],"\"";
+      if ($id_option==$row[0]) echo " selected";
+      echo ">",$row[1],"</option>\n";
     }
-    $res->Close();
+    echo "</select>\n";
+    echo "</td>\n";
+  } else {
+    echo "<input type=\"hidden\" name=\"option\" value=\"0\">\n";
+  }
+  $res->Close();
 }
 
 // Choix du groupe en fonction du diplome ou de l'option
-function choix_groupe($id_diplome, $id_option, $id_groupe, $val_retour, $est_obligatoire) {
-    global $prefix_tables, $DB;
-    if ($id_option > 0) {
-        $req = "SELECT id, nom
-                FROM ".$prefix_tables."groupe g
-                WHERE id_option=?
-                ORDER BY nom ASC";
-        $req_array = array($id_option);
-    } else {
-        $req = "SELECT id, nom
-                FROM ".$prefix_tables."groupe g
-                WHERE id_diplome=?
-                ORDER BY nom ASC";
-        $req_array = array($id_diplome);
-    }
-    $res = $DB->Execute($req, $req_array);
+function choix_groupe($id_diplome, $id_option, $id_groupe, $val_retour,
+		      $est_obligatoire) {
+  global $prefix_tables, $DB;
 
-    if ($res->RecordCount()) {
+  if ($id_option > 0) {
+    $req = "SELECT id, nom
+            FROM ".$prefix_tables."groupe g
+            WHERE id_option=?
+            ORDER BY nom ASC";
+    $req_array = array($id_option);
+  } else {
+    $req = "SELECT id, nom
+            FROM ".$prefix_tables."groupe g
+            WHERE id_diplome=?
+            ORDER BY nom ASC";
+    $req_array = array($id_diplome);
+  }
+  $res = $DB->Execute($req, $req_array);
+
+  if ($res->RecordCount()) {
     echo "<td>Groupe";
     if (!$est_obligatoire) echo " (facultatif)";
-        echo " :</td>\n";
-        echo "<td>\n";
-        echo "<select name=\"groupe\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
-        echo "<option value=\"0\"></option>\n";
-        while ($row = $res->FetchRow()) {
-            echo "<option value=\"",$row[0],"\"",
-                  (($id_groupe==$row[0]) ? " selected" : ""),
-                  ">",$row[1];
-            // Types associés au groupe
-            $req2 = "SELECT libelle
-                    FROM ".$prefix_tables."groupe_type gt, ".$prefix_tables."type_sceance ts
-                    WHERE gt.id_groupe=? AND ts.id=gt.id_type
-                    ORDER BY libelle ASC";
-            $res2 = $DB->Execute($req2, array($row[0]));
-            echo " (";
-            while ($row2 = $res2->FetchRow()) {
-                echo " ",$row2[0];
-            }
-            echo " )</option>\n";
-            $res2->Close();
-        }
-        echo "</select>\n";
-        echo "</td>\n";
-    } else {
-        echo "<input type=\"hidden\" name=\"groupe\" value=\"0\">\n";
+    echo " :</td>\n";
+    echo "<td>\n";
+    echo "<select name=\"groupe\" onChange=\"choix.value=",$val_retour,
+      "; submit();\">\n";
+    echo "<option value=\"0\"></option>\n";
+    while ($row = $res->FetchRow()) {
+      echo "<option value=\"",$row[0],"\"",
+	(($id_groupe==$row[0]) ? " selected" : ""),
+	">",$row[1];
+      // Types associés au groupe
+      $req2 = "SELECT libelle
+               FROM ".$prefix_tables."groupe_type gt, ".$prefix_tables.
+	"type_sceance ts
+               WHERE gt.id_groupe=? AND ts.id=gt.id_type
+               ORDER BY libelle ASC";
+      $res2 = $DB->Execute($req2, array($row[0]));
+      echo " (";
+      while ($row2 = $res2->FetchRow()) {
+	echo " ",$row2[0];
+      }
+      echo " )</option>\n";
+      $res2->Close();
     }
-    $res->Close();
+    echo "</select>\n";
+    echo "</td>\n";
+  } else {
+    echo "<input type=\"hidden\" name=\"groupe\" value=\"0\">\n";
+  }
+  $res->Close();
 }
 
-//Affiche une liste déroulante avec les département existants
+// Affiche une liste déroulante avec les département existants
 function choix_departement($id_departement, $val_retour) {
-    global $prefix_tables, $DB;
-    $req = "SELECT id, libelle
-            FROM ".$prefix_tables."departement
-            ORDER BY libelle asc";
-    $res = $DB->Execute($req);
-    echo "<td>D&eacute;partement :</td>\n";
-    echo "<td>\n";
-    $nb = $res->RecordCount();
-    if ($res == 1) {
-        $row = $res->FetchRow();
-        echo "<input type=\"hidden\" name=\"departement\" value=\"",$row[0],"\">\n";
-        echo "<b>",$row[1],"</b>\n";
-    } elseif ($nb > 1) {
-        echo "<select name=\"departement\" onChange=\"choix.value=",$val_retour,"; submit();\">\n";
-        echo "<option value=\"0\"></option>\n";
-        while ($row = $res->FetchRow()) {
-            echo "<option value=\"",$row[0],"\"",
-                  (($id_departement==$row[0]) ? " selected" : ""),
-                  ">",$row[1],"</option>\n";
-        }
-        echo "</select>\n";
-    } else {
-        echo "<i>Aucun d&eacute;partement</i>\n";
+  global $prefix_tables, $DB;
+
+  $req = "SELECT id, libelle
+          FROM ".$prefix_tables."departement
+          ORDER BY libelle asc";
+  $res = $DB->Execute($req);
+  echo "<td>D&eacute;partement :</td>\n";
+  echo "<td>\n";
+  $nb = $res->RecordCount();
+  if ($res == 1) {
+    $row = $res->FetchRow();
+    echo "<input type=\"hidden\" name=\"departement\" value=\"",$row[0],"\">\n";
+    echo "<b>",$row[1],"</b>\n";
+  } elseif ($nb > 1) {
+    echo "<select name=\"departement\" onChange=\"choix.value=",$val_retour,
+      "; submit();\">\n";
+    echo "<option value=\"0\"></option>\n";
+    while ($row = $res->FetchRow()) {
+      echo "<option value=\"",$row[0],"\"",
+	(($id_departement==$row[0]) ? " selected" : ""),
+	">",$row[1],"</option>\n";
     }
-    echo "</td>\n";
-    $res->Close();
+    echo "</select>\n";
+  } else {
+    echo "<i>Aucun d&eacute;partement</i>\n";
+  }
+  echo "</td>\n";
+  $res->Close();
 }
 
 //Affiche une liste déroulante avec les diplômes existants en fonction de l'id de l'user s'il est directeur d'études

@@ -8,6 +8,15 @@ INSERT INTO "edt_niveau" VALUES (1, 'Licence', 3);
 INSERT INTO "edt_niveau" VALUES (3, 'Doctorat', 3);
 INSERT INTO "edt_niveau" VALUES (2, 'Master', 2);
 
+INSERT INTO edt_annee (numero,id_niveau) VALUES (1,1);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (2,1);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (3,1);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (1,2);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (2,2);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (1,3);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (2,3);
+INSERT INTO edt_annee (numero,id_niveau) VALUES (3,3);
+
 INSERT INTO "edt_mention" VALUES (1, 'Informatique');
 INSERT INTO "edt_mention" VALUES (2, 'Math&eacute;matiques');
 INSERT INTO "edt_mention" VALUES (3, 'MSPI');
@@ -30,24 +39,23 @@ INSERT INTO "edt_mention" VALUES (20, 'Culture et m&eacute;dias');
 INSERT INTO "edt_mention" VALUES (21, 'G&eacute;ographie');
 INSERT INTO "edt_mention" VALUES (22, 'Histoire');
 
-INSERT INTO "edt_specialite" VALUES (1, 'ISIDIS');
-INSERT INTO "edt_specialite" VALUES (2, 'I2L');
-INSERT INTO "edt_specialite" VALUES (3, 'INS3i');
-INSERT INTO "edt_specialite" VALUES (4, 'EIP');
+INSERT INTO "edt_specialite" (libelle) VALUES ('Informatique');
+INSERT INTO "edt_specialite" (libelle) VALUES ('Math&eacute;matiques');
+INSERT INTO "edt_specialite" (libelle) VALUES ('Physique');
 
-INSERT INTO "edt_pole" VALUES (1, 'CGU de Calais');
+INSERT INTO "edt_pole" (libelle) VALUES ('CGU de Calais');
 
-INSERT INTO "edt_departement" VALUES (1, 'Informatique');
-INSERT INTO "edt_departement" VALUES (2, 'Langues');
-INSERT INTO "edt_departement" VALUES (3, 'Math&eacute;matiques');
-INSERT INTO "edt_departement" VALUES (4, 'Physique');
-INSERT INTO "edt_departement" VALUES (5, 'Droit');
-INSERT INTO "edt_departement" VALUES (6, 'Eco-gestion');
-INSERT INTO "edt_departement" VALUES (7, 'EEA');
-INSERT INTO "edt_departement" VALUES (8, 'Biologie');
-INSERT INTO "edt_departement" VALUES (9, 'STAPS');
-INSERT INTO "edt_departement" VALUES (10, 'G&eacute;ographie');
-INSERT INTO "edt_departement" VALUES (11, 'Histoire');
+INSERT INTO "edt_departement" (libelle) VALUES ('Informatique');
+INSERT INTO "edt_departement" (libelle) VALUES ('Langues');
+INSERT INTO "edt_departement" (libelle) VALUES ('Math&eacute;matiques');
+INSERT INTO "edt_departement" (libelle) VALUES ('Physique');
+INSERT INTO "edt_departement" (libelle) VALUES ('Droit');
+INSERT INTO "edt_departement" (libelle) VALUES ('Eco-gestion');
+INSERT INTO "edt_departement" (libelle) VALUES ('EEA');
+INSERT INTO "edt_departement" (libelle) VALUES ('Biologie');
+INSERT INTO "edt_departement" (libelle) VALUES ('STAPS');
+INSERT INTO "edt_departement" (libelle) VALUES ('G&eacute;ographie');
+INSERT INTO "edt_departement" (libelle) VALUES ('Histoire');
 
 INSERT INTO "edt_grade" VALUES (1, 'ATER', 192);
 INSERT INTO "edt_grade" VALUES (2, 'Etudiant', 96);

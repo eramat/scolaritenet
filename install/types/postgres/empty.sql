@@ -1,4 +1,20 @@
 -- --------------------------------------------------------
+-- Structure de la table "PREFIXannee";
+
+DROP TABLE IF EXISTS "PREFIXannee";
+DROP SEQUENCE IF EXISTS "PREFIXannee_id_seq";
+CREATE SEQUENCE "PREFIXannee_id_seq";
+CREATE TABLE "PREFIXannee" (
+  "id" INT NOT NULL UNIQUE,
+  "numero" INT NOT NULL,
+  "id_niveau" INT NOT NULL,
+  PRIMARY KEY("id")
+);
+ALTER TABLE "PREFIXannee"
+    ALTER COLUMN "id"
+        SET DEFAULT NEXTVAL('PREFIXannee_id_seq');
+
+-- --------------------------------------------------------
 -- Structure de la table "PREFIXcalendrier";
 
 DROP TABLE IF EXISTS "PREFIXcalendrier";
