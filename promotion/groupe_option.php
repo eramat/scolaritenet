@@ -2,7 +2,7 @@
 // Pour bloquer l'accès direct à cette page
 if (!defined("acces_ok"))
     exit;
-    
+
 function affiche_liste_options($id) {
     global $prefix_tables;
     $req = "select id, nom from ".$prefix_tables."option where id_diplome=".$id;
@@ -44,7 +44,7 @@ function affiche_formulaire_groupe_option($id_groupe, $id_option, $id_diplome) {
     if (isset($_POST) && !empty($_POST)) {
         $donnees = $_POST;
     } elseif ($id_groupe == 0) {
-        $donnees = array("id_groupe" => 0, "id_option" => $id_option, "id_diplome" => $id_diplome, "nom" => "", "type_sceance" => array());
+        $donnees = array("id_groupe" => 0, "id_option" => $id_option, "id_diplome" => $id_diplome, "nom" => "", "type_seance" => array());
     } else {
         $donnees = charge_donnees_groupe($id_groupe);
     }
@@ -55,7 +55,7 @@ function affiche_formulaire_groupe_option($id_groupe, $id_option, $id_diplome) {
     echo "<input type=\"hidden\" name=\"id_diplome\" value=\"",$id_diplome,"\">\n";
     echo "<tr><td>Nom du groupe</td><td><input type=\"text\" name=\"nom\" size=\"20\" maxlength=\"50\" value=\"",$donnees["nom"],"\"></td></tr>\n";
     echo "<tr><td>Types de<br>sc&eacute;ance<br>associ&eacute;s</td><td>";
-    affiche_types_sceances_checkbox($donnees["type_sceance"]);
+    affiche_types_seances_checkbox($donnees["type_seance"]);
     echo "</td></tr>\n";
     echo "<tr align='center'><td colspan=\"2\"><input type=\"submit\" value=\"Valider\"></td></tr>\n";
     echo "</form>\n";
@@ -82,7 +82,7 @@ function ajoute_nouveau_groupe_option($valeurs) {
     global $prefix_tables;
     mysql_query("insert into ".$prefix_tables."groupe (nom, id_option) values ('".$valeurs["nom"]."', ".$valeurs["id_option"].")");
     $id_groupe = mysql_insert_id();
-    foreach ($valeurs["type_sceance"] as $t) {
+    foreach ($valeurs["type_seance"] as $t) {
         mysql_query("insert into ".$prefix_tables."groupe_type (id_groupe, id_type) values (".$id_groupe.", ".$t.")");
     }
     return $id_groupe;
@@ -96,7 +96,7 @@ function mise_a_jour_groupe_option($valeurs) {
     // Suppression des types de ce groupe
     mysql_query("delete from ".$prefix_tables."groupe_type where id_groupe=".$valeurs["id_groupe"]);
     // Ajout des nouveaux types de ce groupe
-    foreach ($valeurs["type_sceance"] as $t) {
+    foreach ($valeurs["type_seance"] as $t) {
         mysql_query("insert into ".$prefix_tables."groupe_type (id_groupe, id_type) values (".$valeurs["id_groupe"].", ".$t.")");
     }
     return $valeurs["id_groupe"];
@@ -107,9 +107,9 @@ function verifie_formulaire_option() {
     $msg_erreur = "";
     if (empty($_POST["nom"]))
         $msg_erreur .= "Le champ <i>Nom</i> doit &ecirc;tre rempli.<br>";
-    if (!isset($_POST["type_sceance"])) {
+    if (!isset($_POST["type_seance"])) {
         $msg_erreur .= "Vous devez au moins choisir un type de s&eacute;ance";
-        $_POST["type_sceance"] = Array();
+        $_POST["type_seance"] = Array();
     }
     if (!empty($msg_erreur)) {
         erreur($msg_erreur);
@@ -131,7 +131,7 @@ function verifie_existence_groupe_option($id_groupe, $id_option) {
 
 if (isset($_GET["d"]) && $_GET["d"] && verifie_existence_diplome((int)$_GET["d"])) {
     $id_diplome = (int)$_GET["d"];
-    
+
     if (isset($_GET["mode"])) {
         switch($_GET["mode"]) {
             case "liste" :

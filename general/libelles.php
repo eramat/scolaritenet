@@ -17,7 +17,7 @@ function est_type_correct($type) {
   case "pole" : return "P&ocirc;le";
   case "departement" : return "D&eacute;partement";
   case "grade" : return "Grade Enseignant";
-  case "type_sceance" : return "Type de s&eacute;ance";
+  case "type_seance" : return "Type de s&eacute;ance";
   case "type_salle" : return "Type de salle";
   case "pool" : return "Pool";
   default : return false;
@@ -35,7 +35,7 @@ function affiche_menu() {
         <a href='index.php?page=libelles&mode=voir&type=pole'>p&ocirc;les</a>,<br>
         <a href='index.php?page=libelles&mode=voir&type=departement'>d&eacute;partements</a>,<br>
         <a href='index.php?page=libelles&mode=voir&type=grade'>grades enseignants</a>,<br>
-        <a href='index.php?page=libelles&mode=voir&type=type_sceance'>types de s&eacute;ances</a>,<br>
+        <a href='index.php?page=libelles&mode=voir&type=type_seance'>types de s&eacute;ances</a>,<br>
         <a href='index.php?page=libelles&mode=voir&type=type_salle'>types de salles</a>,<br>
         <a href='index.php?page=libelles&mode=voir&type=pool'>pools</a>.</div>";
 }

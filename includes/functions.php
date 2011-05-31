@@ -185,7 +185,6 @@ function choix_groupe($id_diplome, $id_option, $id_groupe, $val_retour,
     $req_array = array($id_diplome);
   }
   $res = $DB->Execute($req, $req_array);
-
   if ($res->RecordCount()) {
     echo "<td>Groupe";
     if (!$est_obligatoire) echo " (facultatif)";
@@ -201,7 +200,7 @@ function choix_groupe($id_diplome, $id_option, $id_groupe, $val_retour,
       // Types associés au groupe
       $req2 = "SELECT libelle
                FROM ".$prefix_tables."groupe_type gt, ".$prefix_tables.
-	"type_sceance ts
+	"type_seance ts
                WHERE gt.id_groupe=? AND ts.id=gt.id_type
                ORDER BY libelle ASC";
       $res2 = $DB->Execute($req2, array($row[0]));
