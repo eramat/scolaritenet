@@ -53,8 +53,9 @@ function est_utilisateur_actif($login) {
   global $prefix_tables, $DB;
 
   $login = strtolower(trim($login));
-  $rep = $DB->GetOne("select id_user from ".$prefix_tables.
-		     "user where login='".$login."' and actif=TRUE");
+  $req = "select id_user from ".$prefix_tables.
+    "user where login='".$login."' and actif=TRUE";
+  $rep = $DB->GetOne($req);
   return $rep;
 }
 
@@ -62,8 +63,9 @@ function verifie_existence_utilisateur($login) {
   global $prefix_tables, $DB;
 
   $login = strtolower(trim($login));
-  return $DB->GetOne("select count(*) from ".$prefix_tables.
-		     "user where login='".$login."'");
+  $req = "select count(*) from ".$prefix_tables.
+    "user where login='".$login."'";
+  return $DB->GetOne($req);
 }
 
 // Formulaire pour le changement de mot de passe
@@ -135,10 +137,13 @@ if (isset($_POST["login"]) && !est_utilisateur_actif($_POST["login"])) {
     echo "<script language='javascript'>document.location.href='index.php?page=menu'</script>\n";
 } elseif (isset($_POST["login"]) && isset($_POST["password"])) {
   $req = "select ut.id_type, t.libelle, u.id_user, ut.id
-            from ".$prefix_tables."user u, ".$prefix_tables."user_type t, ".$prefix_tables."user_est_de_type ut
-            where u.login=? and u.password=md5(?) and ut.id_type=t.id_type and ut.id_user=u.id_user";
-  $req_array = array($_POST["login"], $_POST["password"]);
-  $res = $DB->Execute($req, $req_array);
+          from ".$prefix_tables."user u, ".$prefix_tables."user_type t, ".
+    $prefix_tables."user_est_de_type ut
+          where u.login='".$_POST["login"].
+    "' and u.password=md5('".$_POST["password"].
+    "') and ut.id_type=t.id_type and
+                ut.id_user=u.id_user";
+  $res = $DB->Execute($req);
   $ok = $res->RecordCount();
   if ($ok) {
     $row = $res->FetchRow();
