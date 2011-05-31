@@ -7,13 +7,14 @@ if (!defined("acces_ok"))
 // Affichage de l'entête
 entete("Planification hebdomadaire des modules");
 
-include("diplome_option.php");
-include("periode.php");
+include("includes/diplome_option.php");
+include("includes/periode.php");
 include("repartir.inc.php");
 
 // Valeurs de retour
 global $tab_ret;
-$tab_ret = array("niveau" => 1, "annee" => 2, "domaine" => 3, "diplome" => 4, "option" => 5, "groupe" => 6, "autre" => 7);
+$tab_ret = array("niveau" => 1, "annee" => 2, "domaine" => 3, "diplome" => 4,
+		 "option" => 5, "groupe" => 6, "autre" => 7);
 
 global $idem;
 
@@ -59,7 +60,7 @@ $id_domaine = (isset($_POST["domaine"])) ? $_POST["domaine"] : 0;
 $id_periode =  (isset($_POST["id_periode"])) ? $_POST["id_periode"] : 0;
 
 // Constantes
-$week_number = 10;	
+$week_number = 10;
 $trainning_number = 7;
 
 global $prefix_tables;
@@ -107,7 +108,7 @@ if (isset($_POST["choix"])) {
     }
 }
 
-// Traitement des evenements Promotion, Option, Groupe et scrolling 
+// Traitement des evenements Promotion, Option, Groupe et scrolling
 if (isset($_POST["choice"])) {
     switch ($_POST["choice"]) {
         case -16: // changement de periode
@@ -183,11 +184,11 @@ if ($id_periode > 0) {
     }
     $result->Close();
 }
-	
-/*****************************************************************************/	
+
+/*****************************************************************************/
 /************************** Fonctions JavaScript *****************************/
-/******/	
-/******/	
+/******/
+/******/
 
 print("<script language=\"JavaScript\">\n");
 
@@ -230,12 +231,12 @@ print("  document.main.choix.value=".$tab_ret["autre"].";\n");
 print("  document.main.index.value=id;\n");
 print("  document.main.submit();\n");
 print("}\n");
-  
+
 print("</script>\n");
-	
-/*****************************************************************************/	
+
+/*****************************************************************************/
 /******************************* Formulaire **********************************/
-/*****************************************************************************/	
+/*****************************************************************************/
 
 
 print("      <input type=\"hidden\" name=\"choice\" value=\"-1\">\n");
@@ -263,7 +264,7 @@ if ($id_diplome > 0) {
     select_periode($id_diplome, $id_periode);
     echo "</TD></TR>\n";
 }
-  
+
 echo "<tr><td align=\"center\">\n";
 
 if ($id_periode > 0 AND $G_nb_modules > 0) {
@@ -275,24 +276,24 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
     $date_fin = $une_periode[1];
     $premiere_semaine = strftime("%W",strtotime($date_debut));
     //$premiere_semaine + $nb_semaines;
-    $derniere_semaine = strftime("%W",strtotime($date_fin)); 
+    $derniere_semaine = strftime("%W",strtotime($date_fin));
     if ($derniere_semaine < $premiere_semaine)
         $derniere_semaine += 52;
     $nb_semaines = $derniere_semaine - $premiere_semaine + 1;
-  
+
     // Reduction du nombre de semaines afin de tenir sur un seul ecran
-    if ($week_shift+$week_number>$nb_semaines) 
+    if ($week_shift+$week_number>$nb_semaines)
         $premiere_semaine = $derniere_semaine-$week_number+1;
     else
         $premiere_semaine += $week_shift;
     $nb_semaines = ($nb_semaines <= $week_number)?$nb_semaines:$week_number;
-  
-    /***************************************************************************/	
+
+    /***************************************************************************/
     /************************ Traitement des modifications *********************/
-    /***************************************************************************/	
-  
+    /***************************************************************************/
+
     // indice du module
-    $z1 = floor($index/(4*$nb_semaines)); 
+    $z1 = floor($index/(4*$nb_semaines));
     $id_module2 = $G_id_module[$z1];
 
     // indice du type de la seance (indice ligne)
@@ -320,9 +321,9 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
             break;
     }
 
-    /***************************************************************************/	
+    /***************************************************************************/
     /******************************* Grille ************************************/
-    /***************************************************************************/	
+    /***************************************************************************/
 
     print("<table align=center border=1 cellspacing=0 cellpading=0>\n");
     // Entete de la grille
@@ -334,9 +335,9 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
     for ($i=$premiere_semaine;$i<$premiere_semaine+$nb_semaines;$i++) {
         print("<td align=center rowspan=2><font size=2><i>&nbsp;&nbsp;&nbsp;".(($i>52)?$i-52:$i)."&nbsp;&nbsp;&nbsp;</i></font></td>\n");
     }
-    if ($premiere_semaine+$nb_semaines-1 == $derniere_semaine) 
+    if ($premiere_semaine+$nb_semaines-1 == $derniere_semaine)
         print("<td valign=middle align=center rowspan=2>&nbsp;</td>\n");
-    else 
+    else
         print("<td valign=middle align=center rowspan=2><img src=\"images/Next.gif\"
                 OnClick=\"document.main.choice.value=-13; document.main.choix.value=".$tab_ret["autre"]."; document.main.submit();\"></td>\n");
     print("</tr>\n");
@@ -364,7 +365,7 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
     $grille = "";
 
     // indice pour le parcours de la grille
-    $g = 0;		
+    $g = 0;
 
     /**** optimisation du nombre de lignes par module ****/
     $nb_lignes_defined = isset($nb_lignes);
@@ -377,18 +378,18 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
     else $nb_total_heures = "";
 
     // indice pour le parcours du tableau des heures a programmer
-    $h = 0;		
-  
+    $h = 0;
+
     /**** optimisation du nombre total d'heures programmees par module ****/
     $somme_heures_defined = isset($somme_heures);
     if ($somme_heures_defined) $somme_heures_explode = explode(":",$somme_heures);
     $somme_heures = "";
 
     // indice pour le parcours du tableau des heures programmees
-    $t = 0;		
+    $t = 0;
 
     // found = true des que la cellule modifiee est trouve afin d'eviter un test
-    $found = false; 
+    $found = false;
 
     /*******************************************/
     /*******************************************/
@@ -412,12 +413,12 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                 if ($a_record > 0)
 		  if ($id_groupe <= 0) { // c'est un diplôme ou une option
                     if ($id_option > 0) {// c'est une option
-		      $rep = $DB->GetOne("SELECT g.id 
+		      $rep = $DB->GetOne("SELECT g.id
                                             FROM ".$prefix_tables."groupe g, ".$prefix_tables."groupe_type gt
                                             WHERE g.id_option = ? AND gt.id_groupe = g.id AND gt.id_type = ?",
 					 array($id_option, $k));
                     } else {
-		      $rep = $DB->GetOne("SELECT g.id 
+		      $rep = $DB->GetOne("SELECT g.id
                                             FROM ".$prefix_tables."groupe g, ".$prefix_tables."groupe_type gt
                                             WHERE g.id_diplome = ? AND gt.id_groupe = g.id AND gt.id_type = ?",
 					 array($id_diplome, $k));
@@ -441,7 +442,7 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
             echo "<input type=hidden name=\"nom[$i]\" value=\"",$G_nom[$i],"\" />\n";
             echo "<input type=hidden name=\"id_module[$i]\" value=",$G_id_module[$i]," />\n";
             echo "</td>\n";
-	
+
             // Pour tout type de seance
             for ($k = 1;$k <= $nb_types_seance;$k++) {
                 // tester si des groupes ne sont pas défini
@@ -468,10 +469,10 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                     if ($nb_rows) $ok = true;
                 }
                 if ($ok) {
-                    // variable pour optimiser le calcul de l'indice 
+                    // variable pour optimiser le calcul de l'indice
                     // affecte a chaque cellule de la grille
                     $w1 = $i*$nb_semaines*$nb_types_seance+($k-1)*$nb_semaines;
-	    
+
                     // nombre d'heures a programmer
                     if ($nb_total_heures_defined) {
                         $nb_total_heures1 = $nb_total_heures_explode[$h];
@@ -488,8 +489,8 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                         $nb_total_heures .= $nb_total_heures1.":";
                     }
                     $h++;
-	    
-                    // si le nombre d'heures a programmer est superieur a 0					
+
+                    // si le nombre d'heures a programmer est superieur a 0
                     if ($nb_total_heures1 > 0) {
                         if ($somme_heures_defined) {
                             if (!$found && ($choice <= -26 && $choice >= -30) && $i == $z1 && $k == $z2) {
@@ -508,9 +509,9 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                         }
                         $somme_heures .= $nb_total_heures2.":";
                         $t++;
-	      
+
                         echo "<td align=center>";
-	      
+
                         // Toutes les heures sont-elles programmees ?
                         if ($nb_total_heures1 == $nb_total_heures2) { // Oui !
                             // Petit carre indicateur vert
@@ -523,7 +524,7 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                         } else { // Toutes les heures ne sont pas programmees !
                             // Calcul de la difference
                             $delta = $nb_total_heures1 - $nb_total_heures2;
-                            // Construction du message en fonction du nombre d'heures restant 
+                            // Construction du message en fonction du nombre d'heures restant
                             // a programmer ou de trop programmees
                             if ($delta <= 1) {
                                 switch ($delta) {
@@ -542,25 +543,25 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                                 case 2: print("<img src=\"images/TDRed.gif\" OnClick=\"alert('".$message."');\">\n"); break;
                                 case 3: print("<img src=\"images/TPRed.gif\" OnClick=\"alert('".$message."');\">\n"); break;
                                 case 4: print("<img src=\"images/ExamenRed.gif\" OnClick=\"alert('".$message."');\">\n"); break;
-                            }	
+                            }
                         }
                         print("</td>\n");
-              
-                        // Colonne vide pour synchro avec l'entete			
+
+                        // Colonne vide pour synchro avec l'entete
                         print("<td valign=middle align=center>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n");
-	      
+
                         // Pour chaque semaine
                         for ($j = 1;$j <= $nb_semaines;$j++) {
-                            // variable pour optimiser le calcul de l'indice affecte 
+                            // variable pour optimiser le calcul de l'indice affecte
                             // à chaque cellule de la grille
                             $w2 = $w1 + $j - 1;
                             // numero de la semaine
                             $s = $premiere_semaine+$j-1;
                             $s = ($s>52)?$s-52:$s;
-		
+
                             // la grille est-elle deja definie ?
                             if ($grille_defined) {
-                                // s'il y a eu des changements et que l'on est 
+                                // s'il y a eu des changements et que l'on est
                                 // sur la case modifiee
                                 if (!$found && ($choice <= -26 && $choice >= -30) && $i == $z1 && $k == $z2 && $s == $z3) {
                                     $result = $DB->GetOne("SELECT nombre_heures
@@ -591,13 +592,13 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
                                 print("<area shape=rect coords=\"1,2,10,9\" onClick=\"usr_delete($w2);\">\n");
                                 print("<area shape=rect coords=\"1,11,10,18\" onClick=\"usr_dec($w2);\">\n");
                                 print("</map>\n");
-                                print("<img src=\"images/Heure_left.gif\" border=0 usemap=\"#map_".$w2."_l\">\n"); 
+                                print("<img src=\"images/Heure_left.gif\" border=0 usemap=\"#map_".$w2."_l\">\n");
                                 print("<font size=2><b>$nb_heures</b></font>");
                                 print("<map name=\"map_".$w2."_r\">\n");
                                 print("<area shape=rect coords=\"1,2,10,9\" onClick=\"usr_inc1($w2);\">\n");
                                 print("<area shape=rect coords=\"1,11,10,18\" onClick=\"usr_inc($w2);\">\n");
                                 print("</map>\n");
-                                print("<img src=\"images/Heure_right.gif\" border=0 usemap=\"#map_".$w2."_r\">\n"); 
+                                print("<img src=\"images/Heure_right.gif\" border=0 usemap=\"#map_".$w2."_r\">\n");
                                 print("</td>\n");
                             } else {
                                 print("<td bgcolor=\"#ffffff\"><img src=\"images/Blanc.gif\" OnClick=\"usr_new($w2);\"></td>\n");
@@ -612,10 +613,10 @@ if ($id_periode > 0 AND $G_nb_modules > 0) {
     }
     print("<tr>\n");
     print("<td colspan=2>&nbsp;</td>\n");
-    if ($v == $G_nb_modules) 
+    if ($v == $G_nb_modules)
         print("<td valign=middle align=center>&nbsp;</td>\n");
-    else 
-        print("<td valign=middle align=center><img src=\"images/Next2.gif\" 
+    else
+        print("<td valign=middle align=center><img src=\"images/Next2.gif\"
                 OnClick=\"document.main.choice.value=-15; document.main.choix.value=".$tab_ret["autre"]."; document.main.submit();\"></td>\n");
     print("<td colspan=".($week_number+1).">&nbsp;</td>\n");
     print("</tr>\n");
