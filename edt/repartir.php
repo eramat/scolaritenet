@@ -75,7 +75,7 @@ echo "<input type=\"hidden\" name=\"choix\" value=\"0\">\n";
 if (est_administrateur($_SESSION["usertype"])) {
   select_diplome_option_groupe($id_niveau, $id_annee, $id_domaine, 0, 0, 0, 0, $id_diplome, $id_option, $id_groupe);
  } elseif (est_directeur_etude($_SESSION["usertype"])) {
-   echo "<table align=\"center\" cellepadding=0 cellspacing=0><tr>\n";
+   echo "<table align=\"center\" cellpadding=0 cellspacing=0><tr>\n";
    choix_diplome_dde($id_diplome, $tab_ret["diplome"]);
    if ($id_diplome > 0) {
      echo "</tr><tr>\n";
